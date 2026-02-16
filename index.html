@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiquetera de Bienestar UCN</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Estilos Personalizados y Animaciones -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            overflow-x: hidden;
+            ::selection { background-color: #e9d5ff; }
+        }
+
+        /* Animación de Blobs de Fondo */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob {
+            animation: blob 10s infinite;
+        }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+
+        /* Perspectiva 3D */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        /* Animación de Flotación del Emoji */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+        .float-emoji {
+            animation: float 6s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        /* Patrón de puntos */
+        .bg-dots {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Clases para animaciones de entrada controladas por JS */
+        .opacity-0 { opacity: 0; }
+        .opacity-100 { opacity: 1; }
+        .translate-y-20 { transform: translateY(5rem); }
+        .translate-y-0 { transform: translateY(0); }
+        .transition-entrance { transition: all 1s ease-out; }
+
+        /* Efectos Hover personalizados */
+        .ticket-container {
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
+        }
+        
+        .group:hover .ticket-container {
+            transform: translateY(-12px) rotateX(2deg) rotateY(-2deg) scale(1.02);
+        }
+
+        .sheen-effect {
+            background: linear-gradient(to top right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(12deg) translateX(-200%);
+            transition: transform 1s;
+        }
+        .group:hover .sheen-effect {
+            transform: skewX(12deg) translateX(200%);
+        }
+    </style>
+</head>
+<body class="min-h-screen relative text-slate-800">
+
+    <!-- Fondo Animado -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-300/30 rounded-full blur-[100px] mix-blend-multiply animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-blue-300/30 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-pink-300/30 rounded-full blur-[100px] mix-blend-multiply animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <div class="relative z-10 container mx-auto px-4 py-12 flex flex-col items-center">
+        
+        <!-- Encabezado -->
+        <div id="header" class="text-center mb-16 opacity-0 translate-y-20 transition-entrance">
+            <div class="inline-block mb-4">
+                <span class="py-2 px-6 rounded-full bg-white shadow-lg text-sm font-bold tracking-wider uppercase bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text border border-white/50">
+                    Bienestar Universitario
+                </span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-black text-slate-800 mb-6 tracking-tight drop-shadow-sm">
+                Tiquetera <br class="md:hidden" />
+                <span class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-transparent bg-clip-text filter drop-shadow-sm">
+                    Virtual
+                </span>
+            </h1>
+            <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                Una experiencia interactiva para tu crecimiento. <br/>
+                <span class="font-semibold text-slate-700">Elige tu ticket y comienza el viaje.</span>
+            </p>
+        </div>
+
+        <!-- Grid de Tickets (Se llena con JS) -->
+        <div id="tickets-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 w-full max-w-7xl perspective-1000">
+            <!-- Los tickets se generarán aquí automáticamente -->
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-20 text-center relative z-20">
+            <a href="https://ucn.edu.co" target="_blank" rel="noopener noreferrer"
+               class="group inline-flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors font-medium hover-trigger">
+                <span>Ir al sitio oficial UCN</span>
+                <i data-lucide="external-link" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Lógica de Javascript -->
+    <script>
+        // Datos de los Servicios
+        const services = [
+            {
+                id: 1,
+                title: "Asesoría Espiritual",
+                emoji: "🕊️",
+                description: "Encuentra paz, propósito y conexión interior.",
+                color: "from-indigo-500 via-purple-500 to-purple-600",
+                shadow: "shadow-purple-500/40",
+                delay: "0ms",
+                shape: "bg-purple-400/30"
+            },
+            {
+                id: 2,
+                title: "Asesoría Psicológica",
+                emoji: "🧠",
+                description: "Espacio de escucha para tu salud mental.",
+                color: "from-blue-400 via-cyan-500 to-teal-500",
+                shadow: "shadow-cyan-500/40",
+                delay: "100ms",
+                shape: "bg-cyan-400/30"
+            },
+            {
+                id: 3,
+                title: "Asesoría Psicopedagógica",
+                emoji: "🎓",
+                description: "Potencia tus estrategias de aprendizaje.",
+                color: "from-emerald-400 via-green-500 to-teal-600",
+                shadow: "shadow-emerald-500/40",
+                delay: "200ms",
+                shape: "bg-emerald-400/30"
+            },
+            {
+                id: 4,
+                title: "Asesoría Laboral",
+                emoji: "🚀",
+                description: "Impulso para tu éxito profesional.",
+                color: "from-orange-400 via-red-500 to-rose-600",
+                shadow: "shadow-orange-500/40",
+                delay: "300ms",
+                shape: "bg-orange-400/30"
+            },
+            {
+                id: 5,
+                title: "Orientación Vocacional",
+                emoji: "🧭",
+                description: "Define tu camino y tus metas.",
+                color: "from-pink-500 via-rose-500 to-red-600",
+                shadow: "shadow-pink-500/40",
+                delay: "400ms",
+                shape: "bg-pink-400/30"
+            }
+        ];
+
+        // --- SISTEMA DE AUDIO ---
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                }
+            }
+            // Intentar reanudar si está suspendido (requerimiento de navegadores)
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playHoverSound() {
+            initAudio(); // Asegurar inicialización
+            if (!audioCtx) return;
+
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                // Configuración del sonido "Pop" alegre
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.1);
+
+                // Envolvente de volumen (Fade in/out rápido)
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            } catch (e) {
+                console.log("Audio no disponible aún (interacción requerida)");
+            }
+        }
+
+        // Desbloquear audio con el primer click en cualquier lado (truco para autoplay policies)
+        document.body.addEventListener('click', initAudio, { once: true });
+        document.body.addEventListener('touchstart', initAudio, { once: true });
+
+
+        // --- RENDERIZADO DE TICKETS ---
+        const grid = document.getElementById('tickets-grid');
+
+        services.forEach(service => {
+            const ticketHTML = `
+                <a href="https://ucn.edu.co/consultame/" target="_blank" rel="noopener noreferrer" 
+                   class="group relative block w-full outline-none opacity-0 translate-y-20 transition-entrance hover-trigger"
+                   style="transition-delay: ${service.delay};">
+                    
+                    <!-- Contenedor Animado (Tilt & Hover) -->
+                    <div class="ticket-container relative w-full">
+                        
+                        <!-- Sombra Glow -->
+                        <div class="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-r ${service.color} opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-500"></div>
+
+                        <!-- TICKET CARD -->
+                        <div class="relative h-64 md:h-56 flex rounded-3xl overflow-hidden bg-gradient-to-br ${service.color} shadow-xl ${service.shadow} border border-white/20">
+                            
+                            <!-- Fondo Puntos -->
+                            <div class="absolute inset-0 bg-dots opacity-30 mix-blend-overlay"></div>
+
+                            <!-- Blobs Decorativos Internos -->
+                            <div class="absolute top-[-20%] left-[-10%] w-40 h-40 rounded-full mix-blend-overlay blur-2xl ${service.shape} animate-blob"></div>
+                            <div class="absolute bottom-[-10%] right-[30%] w-32 h-32 rounded-full mix-blend-overlay blur-xl bg-white/10 animate-blob animation-delay-2000"></div>
+
+                            <!-- Muescas (Círculos) -->
+                            <div class="absolute top-1/2 -left-4 w-8 h-8 bg-[#f0f4f8] rounded-full transform -translate-y-1/2 shadow-inner z-20"></div>
+                            <div class="absolute top-1/2 -right-4 w-8 h-8 bg-[#f0f4f8] rounded-full transform -translate-y-1/2 shadow-inner z-20"></div>
+
+                            <!-- Línea Divisoria -->
+                            <div class="absolute top-0 right-0 md:right-24 h-full w-[2px] border-l-2 border-dashed border-white/30 z-10 hidden md:block"></div>
+
+                            <!-- Contenido Izquierdo -->
+                            <div class="flex-1 p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start text-center md:text-left z-10 relative">
+                                <!-- Emoji 3D -->
+                                <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6 relative group-hover:scale-110 transition-transform duration-500 ease-out">
+                                    <div class="text-7xl md:text-8xl filter drop-shadow-2xl float-emoji select-none">
+                                        ${service.emoji}
+                                    </div>
+                                </div>
+                                
+                                <!-- Textos -->
+                                <div class="flex flex-col justify-center h-full">
+                                    <h3 class="text-2xl md:text-3xl font-black text-white leading-none mb-2 drop-shadow-md tracking-tight">
+                                        ${service.title}
+                                    </h3>
+                                    <p class="text-white/90 font-medium text-sm md:text-base leading-snug">
+                                        ${service.description}
+                                    </p>
+                                    <!-- Botón Simulado -->
+                                    <div class="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white text-xs font-bold uppercase tracking-widest transition-colors w-fit mx-auto md:mx-0">
+                                        <span>Solicitar</span>
+                                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Stub Derecho (Solo Desktop) -->
+                            <div class="hidden md:flex w-24 flex-col items-center justify-center bg-black/10 backdrop-blur-sm z-10">
+                                <span class="text-white/80 font-mono text-xs font-bold rotate-90 whitespace-nowrap tracking-widest">
+                                    UCN • #00${service.id}
+                                </span>
+                            </div>
+
+                            <!-- Brillo Hover (Sheen) -->
+                            <div class="absolute inset-0 sheen-effect pointer-events-none"></div>
+                        </div>
+                    </div>
+                </a>
+            `;
+            grid.innerHTML += ticketHTML;
+        });
+
+        // --- INICIALIZACIÓN Y ANIMACIONES ---
+        window.onload = () => {
+            // Inicializar Iconos Lucide
+            lucide.createIcons();
+
+            // Animación de Entrada (Entrance)
+            const header = document.getElementById('header');
+            const tickets = document.querySelectorAll('#tickets-grid > a');
+
+            // Trigger header
+            setTimeout(() => {
+                header.classList.remove('opacity-0', 'translate-y-20');
+                header.classList.add('opacity-100', 'translate-y-0');
+            }, 100);
+
+            // Trigger tickets con sus estilos de delay inline
+            tickets.forEach(ticket => {
+                setTimeout(() => {
+                    ticket.classList.remove('opacity-0', 'translate-y-20');
+                    ticket.classList.add('opacity-100', 'translate-y-0');
+                }, 100); // El delay real lo maneja el CSS inline style="transition-delay..."
+            });
+
+            // Asignar Eventos de Sonido
+            const triggers = document.querySelectorAll('.hover-trigger');
+            triggers.forEach(el => {
+                el.addEventListener('mouseenter', playHoverSound);
+                // También en touchstart para móviles
+                el.addEventListener('touchstart', () => {
+                    initAudio(); // Intento extra para móviles
+                    playHoverSound();
+                }, { passive: true });
+            });
+        };
+
+    </script>
+</body>
+</html>
