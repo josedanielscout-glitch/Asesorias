@@ -18,21 +18,51 @@
         body {
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
-            ::selection { background-color: #e9d5ff; }
+            background-color: #f8fafc; /* Fondo base claro */
+            color: #1e293b;
+            /* Scrollbar suave nativo */
+            scroll-behavior: smooth;
         }
 
-        /* Animación suave del color de fondo */
-        @keyframes gradient-bg {
+        /* --- SCROLLBAR CREATIVO --- */
+        ::-webkit-scrollbar {
+            width: 14px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: #f1f5f9;
+            border-left: 1px solid #e2e8f0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            /* Gradiente creativo para el deslizador */
+            background: linear-gradient(to bottom, #60a5fa, #a78bfa, #f472b6);
+            border-radius: 10px;
+            border: 3px solid #f1f5f9; /* Borde blanco para efecto 'flotante' */
+            background-clip: padding-box;
+            transition: all 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #3b82f6, #8b5cf6, #ec4899);
+            border: 2px solid #f1f5f9;
+        }
+
+        /* --- FONDO ANIMADO SUAVE --- */
+        @keyframes gradient-move {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        .animate-gradient-bg {
+        
+        .soft-gradient-bg {
+            /* Gradiente Pastel Luminoso */
+            background: linear-gradient(-45deg, #eff6ff, #fdf4ff, #f0f9ff, #faf5ff);
             background-size: 400% 400%;
-            animation: gradient-bg 15s ease infinite;
+            animation: gradient-move 20s ease infinite;
         }
 
-        /* Animación de Blobs de Fondo */
+        /* Blobs de Fondo */
         @keyframes blob {
             0% { transform: translate(0px, 0px) scale(1); }
             33% { transform: translate(30px, -50px) scale(1.1); }
@@ -40,7 +70,7 @@
             100% { transform: translate(0px, 0px) scale(1); }
         }
         .animate-blob {
-            animation: blob 10s infinite;
+            animation: blob 15s infinite;
         }
         .animation-delay-2000 { animation-delay: 2s; }
         .animation-delay-4000 { animation-delay: 4s; }
@@ -60,10 +90,17 @@
             display: inline-block;
         }
 
-        /* Patrón de puntos */
+        /* Patrón de puntos sutil */
         .bg-dots {
             background-image: radial-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px);
             background-size: 20px 20px;
+        }
+        
+        /* Patrón de fondo general */
+        .bg-grid-pattern {
+             background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+             background-size: 40px 40px;
+             opacity: 0.3;
         }
 
         /* Clases para animaciones de entrada controladas por JS */
@@ -81,10 +118,11 @@
         
         .group:hover .ticket-container {
             transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
         .sheen-effect {
-            background: linear-gradient(to top right, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(to top right, transparent, rgba(255,255,255,0.4), transparent);
             transform: skewX(12deg) translateX(-200%);
             transition: transform 1s;
         }
@@ -93,49 +131,49 @@
         }
     </style>
 </head>
-<!-- Fondo gradiente animado en el body -->
-<body class="min-h-screen relative text-slate-800 animate-gradient-bg bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+<body class="min-h-screen relative soft-gradient-bg">
 
-    <!-- Fondo Animado con Blobs más coloridos -->
+    <!-- Patrón de fondo geométrico sutil -->
+    <div class="fixed inset-0 bg-grid-pattern pointer-events-none z-0"></div>
+
+    <!-- Blobs de Fondo (Colores suaves) -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <!-- Blob Violeta/Azul -->
-        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-gradient-to-r from-purple-400 to-indigo-500 rounded-full blur-[80px] opacity-40 mix-blend-multiply animate-blob"></div>
-        <!-- Blob Amarillo/Naranja -->
-        <div class="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-gradient-to-r from-yellow-300 to-orange-400 rounded-full blur-[80px] opacity-40 mix-blend-multiply animate-blob animation-delay-2000"></div>
-        <!-- Blob Rosa/Rojo -->
-        <div class="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-gradient-to-r from-pink-400 to-red-400 rounded-full blur-[80px] opacity-40 mix-blend-multiply animate-blob animation-delay-4000"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-200 rounded-full blur-[100px] opacity-50 mix-blend-multiply animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-blue-200 rounded-full blur-[100px] opacity-50 mix-blend-multiply animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-pink-200 rounded-full blur-[100px] opacity-50 mix-blend-multiply animate-blob animation-delay-4000"></div>
     </div>
 
     <!-- Contenido Principal -->
     <div class="relative z-10 container mx-auto px-4 py-12 flex flex-col items-center max-w-[95%]">
         
-        <!-- Encabezado -->
+        <!-- Encabezado Restaurado (Equilibrado) -->
         <div id="header" class="text-center mb-12 opacity-0 translate-y-20 transition-entrance">
             <div class="inline-block mb-4">
-                <span class="py-2 px-6 rounded-full bg-white/80 backdrop-blur-sm shadow-lg text-sm font-bold tracking-wider uppercase bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text border border-white/50">
-                    Pastoral y Bienestar Institucional
+                <span class="py-2 px-6 rounded-full bg-white/60 backdrop-blur-sm shadow-sm text-sm font-bold tracking-wider uppercase bg-gradient-to-r from-blue-600 to-purple-600 text-transparent bg-clip-text border border-white/50">
+                    Bienestar Universitario
                 </span>
             </div>
             <h1 class="text-4xl md:text-6xl font-black text-slate-800 mb-4 tracking-tight drop-shadow-sm">
                  <br class="md:hidden" />
                 <span class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-transparent bg-clip-text filter drop-shadow-sm">
-                    Tiquetera para tu bienestar
+                    La Católica del Norte te brinda un acompañamiento integral.
+                    Elige la asesoría de acuerdo a tu necesidad:
                 </span>
             </h1>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium">
-                La Católica del Norte te brinda un acompañamiento integral. Elige la asesoría de acuerdo a tu necesidad:
+                Elige tu ticket y comienza el viaje hacia tu bienestar.
             </p>
         </div>
 
-        <!-- Grid de Tickets (Ancho completo y estirado) -->
+        <!-- Grid de Tickets -->
         <div id="tickets-grid" class="flex flex-wrap justify-center gap-6 w-full perspective-1000">
             <!-- Los tickets se generarán aquí automáticamente -->
         </div>
 
-        <!-- Footer -->
+        <!-- Footer Restaurado (Botón Sitio Oficial) -->
         <div class="mt-16 text-center relative z-20">
             <a href="https://ucn.edu.co/virtualmente/" target="_blank" rel="noopener noreferrer"
-               class="group inline-flex items-center gap-2 text-slate-600 hover:text-blue-700 transition-colors font-bold hover-trigger bg-white/50 px-6 py-2 rounded-full backdrop-blur-sm shadow-sm hover:bg-white hover:shadow-md">
+               class="group inline-flex items-center gap-2 text-slate-600 hover:text-blue-700 transition-all font-bold hover-trigger bg-white/60 px-8 py-3 rounded-full backdrop-blur-md shadow-md hover:bg-white hover:shadow-lg hover:scale-105 border border-white/40">
                 <span>Conoce otros servicios en Virtualmente</span>
                 <i data-lucide="external-link" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
             </a>
@@ -247,8 +285,7 @@
         const grid = document.getElementById('tickets-grid');
 
         services.forEach(service => {
-            // Se eliminó la clase 'flex-grow' para evitar que el último elemento se estire completamente
-            // Ahora mantendrá el mismo ancho (50% aprox) que los demás y quedará centrado.
+            // Estructura: 2 por fila, con el último centrado (sin flex-grow)
             const ticketHTML = `
                 <a href="https://ucn.edu.co/consultame/" target="_blank" rel="noopener noreferrer" 
                    class="group relative block w-full md:w-[calc(50%-1rem)] outline-none opacity-0 translate-y-20 transition-entrance hover-trigger"
@@ -257,25 +294,30 @@
                     <!-- Contenedor Animado -->
                     <div class="ticket-container relative w-full h-full">
                         
-                        <div class="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-r ${service.color} opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-500"></div>
+                        <!-- Sombra suave -->
+                        <div class="absolute -inset-2 rounded-[2.5rem] bg-gradient-to-r ${service.color} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500"></div>
 
-                        <div class="relative h-64 md:h-60 flex rounded-3xl overflow-hidden bg-gradient-to-br ${service.color} shadow-xl ${service.shadow} border border-white/20">
+                        <!-- Ticket Card -->
+                        <div class="relative h-64 md:h-60 flex rounded-3xl overflow-hidden bg-gradient-to-br ${service.color} shadow-lg group-hover:shadow-2xl transition-shadow duration-300 border border-white/20">
                             
+                            <!-- Patrones de fondo -->
                             <div class="absolute inset-0 bg-dots opacity-30 mix-blend-overlay"></div>
-
+                            
+                            <!-- Blobs internos del ticket -->
                             <div class="absolute top-[-20%] left-[-10%] w-40 h-40 rounded-full mix-blend-overlay blur-2xl ${service.shape} animate-blob"></div>
                             <div class="absolute bottom-[-10%] right-[30%] w-32 h-32 rounded-full mix-blend-overlay blur-xl bg-white/10 animate-blob animation-delay-2000"></div>
 
-                            <div class="absolute top-1/2 -left-4 w-8 h-8 bg-[#f0f4f8] rounded-full transform -translate-y-1/2 shadow-inner z-20"></div>
-                            <div class="absolute top-1/2 -right-4 w-8 h-8 bg-[#f0f4f8] rounded-full transform -translate-y-1/2 shadow-inner z-20"></div>
+                            <!-- Muescas laterales -->
+                            <div class="absolute top-1/2 -left-4 w-8 h-8 bg-white/80 backdrop-blur rounded-full transform -translate-y-1/2 shadow-inner z-20"></div>
+                            <div class="absolute top-1/2 -right-4 w-8 h-8 bg-white/80 backdrop-blur rounded-full transform -translate-y-1/2 shadow-inner z-20"></div>
 
-                            <!-- Línea divisoria movida más a la derecha para dar más espacio al contenido -->
-                            <div class="absolute top-0 right-0 md:right-28 h-full w-[2px] border-l-2 border-dashed border-white/30 z-10 hidden md:block"></div>
+                            <!-- Línea divisoria -->
+                            <div class="absolute top-0 right-0 md:right-28 h-full w-[2px] border-l-2 border-dashed border-white/40 z-10 hidden md:block"></div>
 
-                            <!-- Contenido Principal (Estirable) -->
+                            <!-- Contenido Principal -->
                             <div class="flex-1 p-6 md:p-8 flex flex-col md:flex-row items-center md:items-center text-center md:text-left z-10 relative">
                                 <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-8 relative group-hover:scale-110 transition-transform duration-500 ease-out">
-                                    <div class="text-7xl md:text-8xl filter drop-shadow-2xl float-emoji select-none">
+                                    <div class="text-7xl md:text-8xl filter drop-shadow-xl float-emoji select-none">
                                         ${service.emoji}
                                     </div>
                                 </div>
@@ -284,17 +326,17 @@
                                     <h3 class="text-2xl md:text-3xl font-black text-white leading-none mb-2 drop-shadow-md tracking-tight">
                                         ${service.title}
                                     </h3>
-                                    <p class="text-white/90 font-medium text-sm md:text-base leading-snug max-w-lg">
+                                    <p class="text-white/95 font-medium text-sm md:text-base leading-snug max-w-lg">
                                         ${service.description}
                                     </p>
-                                    <div class="mt-4 inline-flex items-center gap-2 px-5 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white text-xs font-bold uppercase tracking-widest transition-colors w-fit mx-auto md:mx-0">
+                                    <div class="mt-4 inline-flex items-center gap-2 px-5 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full text-white text-xs font-bold uppercase tracking-widest transition-colors w-fit mx-auto md:mx-0 shadow-sm border border-white/10">
                                         <span>Solicitar</span>
                                         <i data-lucide="chevron-right" class="w-4 h-4"></i>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Stub Derecho (Fijo, no se encoge) -->
+                            <!-- Stub Derecho -->
                             <div class="hidden md:flex w-28 flex-shrink-0 flex-col items-center justify-center bg-black/10 backdrop-blur-sm z-10">
                                 <span class="text-white/90 font-mono text-sm font-bold rotate-90 whitespace-nowrap tracking-widest">
                                     UCN • #00${service.id}
